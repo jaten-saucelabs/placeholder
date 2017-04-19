@@ -41,7 +41,8 @@ func NewWebServer(host, port, msg string) *WebServer {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "OK %v\n", msg)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "200 OK %v\n", msg)
 	})
 
 	s.tts = tigertonic.NewServer(addr, http.DefaultServeMux) // supply debug/pprof diagnostics
@@ -153,6 +154,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fireant.NewWebServer("0.0.0.0", fmt.Sprintf("%d", port), colorCode)
+	fireant.NewWebServer("0.0.0.0", fmt.Sprintf("%d", port), colorCode, log.New(os.Stderr, "", log.LUTC|log.LstdFlags|log.Lmicroseconds))
 	select {}
 }
